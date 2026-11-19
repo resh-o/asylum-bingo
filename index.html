@@ -119,7 +119,8 @@ input.t:focus{border-color:var(--sun);background:#fff}
 nav{position:fixed;left:0;right:0;bottom:0;padding:8px 16px calc(8px + env(safe-area-inset-bottom));background:rgba(251,244,233,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line);z-index:5}
 nav .in{max-width:480px;margin:0 auto;display:flex;gap:6px}
 nav button{flex:1;border:0;background:none;padding:8px 4px;border-radius:12px;font-size:.72rem;font-weight:600;color:var(--ink2);display:flex;flex-direction:column;align-items:center;gap:2px}
-nav button .i{font-size:1.2rem}
+nav button svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+nav button.on svg{stroke:var(--sun)}
 nav button.on{background:var(--paper);color:var(--ink);box-shadow:0 2px 8px -4px rgba(18,60,70,.3)}
 
 /* sheet */
@@ -136,8 +137,36 @@ nav button.on{background:var(--paper);color:var(--ink);box-shadow:0 2px 8px -4px
 .sheet .shot div{font-size:.75rem;color:var(--ink2);margin-top:8px;text-align:center}
 .sheet .note{font-size:.8rem;color:var(--ink2);text-align:center;margin-top:10px}
 
-.toast{position:fixed;left:50%;top:calc(14px + env(safe-area-inset-top));transform:translate(-50%,-140%);background:var(--ink);color:var(--cream);padding:11px 18px;border-radius:999px;font-weight:600;font-size:.9rem;z-index:30;transition:transform .3s;white-space:nowrap;max-width:92vw;overflow:hidden;text-overflow:ellipsis}
-.toast.show{transform:translate(-50%,0)}
+.toast{position:fixed;left:50%;top:calc(14px + env(safe-area-inset-top));transform:translate(-50%,-24px);opacity:0;visibility:hidden;background:var(--ink);color:var(--cream);padding:11px 18px;border-radius:999px;font-weight:600;font-size:.9rem;z-index:30;transition:transform .3s,opacity .3s,visibility .3s;white-space:nowrap;max-width:92vw;overflow:hidden;text-overflow:ellipsis;box-shadow:0 10px 24px -10px rgba(18,60,70,.6)}
+.toast.show{transform:translate(-50%,0);opacity:1;visibility:visible}
+section{animation:fade .35s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}}
+
+/* leaderboard extras */
+.medal{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:700;font-size:1.05rem;flex-shrink:0;background:var(--cream);color:var(--ink2)}
+.medal.m1{background:linear-gradient(135deg,#F6D78B,#E9B44C);color:#fff}
+.medal.m2{background:linear-gradient(135deg,#E3E7E8,#B9C3C6);color:#fff}
+.medal.m3{background:linear-gradient(135deg,#F0C3A0,#D08A5C);color:#fff}
+.mini{display:grid;grid-template-columns:repeat(4,7px);gap:3px;margin-top:8px}
+.mini i{width:7px;height:7px;border-radius:2px;background:var(--line)}
+.mini i.on{background:var(--sun)}
+.lr .sc small{display:block;font-family:var(--sans);font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);text-align:right}
+.rules{margin-top:22px;background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:18px}
+.rules h4{font-family:var(--serif);font-weight:500;font-size:1.15rem;margin:0 0 12px}
+.rules .r{display:flex;gap:12px;align-items:flex-start;font-size:.85rem;color:var(--ink2);margin:10px 0;line-height:1.4}
+.rules .r b{color:var(--ink)}
+.rules .ic{width:30px;height:30px;border-radius:10px;background:var(--cream);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.95rem}
+.sec-title{display:flex;align-items:baseline;justify-content:space-between;margin:18px 2px 12px}
+.sec-title h2{font-family:var(--serif);font-weight:500;font-size:1.4rem;margin:0}
+.sec-title span{font-size:.75rem;color:var(--ink2)}
+
+/* empty feed */
+.emptyfeed{display:flex;flex-direction:column;align-items:center;padding:20px 0 10px;text-align:center}
+.ghostpol{width:62%;background:#fff;padding:10px 10px 38px;border-radius:4px;transform:rotate(-3deg);box-shadow:0 14px 28px -16px rgba(18,60,70,.5);position:relative}
+.ghostpol div{aspect-ratio:1;border-radius:2px;background:linear-gradient(160deg,#FCE3C6,#F4A774 70%,#2D7D86 70%,#123C46);opacity:.55}
+.ghostpol::after{content:"your first memory";position:absolute;bottom:10px;left:0;right:0;font-family:var(--serif);font-style:italic;color:var(--ink2);font-size:.9rem}
+.emptyfeed p{margin:26px 0 0;color:var(--ink2);font-size:.9rem;line-height:1.5}
+.emptyfeed p b{font-family:var(--serif);font-weight:500;color:var(--ink);font-size:1.15rem;display:block;margin-bottom:2px}
 .spin{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;vertical-align:-3px}
 @keyframes sp{to{transform:rotate(360deg)}}
 canvas#cf{position:fixed;inset:0;pointer-events:none;z-index:40}
@@ -179,7 +208,7 @@ canvas#cf{position:fixed;inset:0;pointer-events:none;z-index:40}
       <div><div class="tn" id="meTeam"></div><div class="pn" id="mePeople"></div></div>
       <div class="pts"><b id="mePts">0</b><small>points</small></div>
     </div>
-    <div class="chips"><div class="chip"><b id="meDone">0</b>/16 done</div><div class="chip"><b id="meLines">0</b> bingos</div><div class="chip">#<b id="meRank">–</b> place</div></div>
+    <div class="chips"><div class="chip"><b id="meDone">0</b>/16 done</div><div class="chip"><b id="meLines">0</b> <span id="meLinesW">bingos</span></div><div class="chip">#<b id="meRank">–</b> place</div></div>
     <div class="grid" id="grid"></div>
     <p class="hint">Tap a square · add a photo as proof · full line = +50</p>
   </section>
@@ -188,19 +217,19 @@ canvas#cf{position:fixed;inset:0;pointer-events:none;z-index:40}
   <section id="vBoard" hidden>
     <div id="winBox"></div>
     <div class="lb" id="lb"></div>
-    <p class="hint">Tap a team to see their card</p>
   </section>
 
   <!-- FEED -->
   <section id="vFeed" hidden>
+    <div class="sec-title"><h2>The Camera Roll</h2><span id="feedCount"></span></div>
     <div class="feed" id="feed"></div>
   </section>
 </div>
 
 <nav id="nav" hidden><div class="in">
-  <button data-v="vCard" class="on"><span class="i">▦</span>Our card</button>
-  <button data-v="vBoard"><span class="i">🏆</span>Leaderboard</button>
-  <button data-v="vFeed"><span class="i">📸</span>Photos</button>
+  <button data-v="vCard" class="on"><svg viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.8"/></svg>Our card</button>
+  <button data-v="vBoard"><svg viewBox="0 0 24 24"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M17 6h2.5a1.5 1.5 0 0 1 0 3.5c-.9 1.8-2.4 2.5-3 2.6M7 6H4.5a1.5 1.5 0 0 0 0 3.5c.9 1.8 2.4 2.5 3 2.6"/></svg>Leaderboard</button>
+  <button data-v="vFeed"><svg viewBox="0 0 24 24"><path d="M4 8.5A2.5 2.5 0 0 1 6.5 6h1.3l1.4-2h5.6l1.4 2h1.3A2.5 2.5 0 0 1 20 8.5v9a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 17.5z"/><circle cx="12" cy="13" r="3.5"/></svg>Photos</button>
 </div></nav>
 
 <div class="ov" id="ov"><div class="sheet" id="sheet"></div></div>
@@ -223,12 +252,12 @@ const TASKS = [
   ["🌅","Sunset at Lookout Beach",15],
   ["🦐","Eat fresh seafood",15],
   ["☀️","Catch a sunrise",30],
-  ["🤸","Get a stranger to film you doing a cartwheel",30],
+  ["🤸","Get a stranger to film you doing a cartwheel",30,"Stranger films your cartwheel"],
   ["🐚","Find a shell bigger than your palm",10],
   ["🍦","Ice cream on the beach",10],
   ["🎁","Buy a stranger something",20],
   ["💃","Dance in public",25],
-  ["🪪","Find a stranger with the same name as someone in the house",35],
+  ["🪪","Find a stranger with the same name as someone in the house",35,"Stranger with a housemate's name"],
   ["✨","Do something you've never done",35]
 ];
 const LINES = (() => { const L=[]; for(let i=0;i<4;i++){L.push([0,1,2,3].map(j=>i*4+j));L.push([0,1,2,3].map(j=>j*4+i));} L.push([0,5,10,15],[3,6,9,12]); return L; })();
@@ -325,7 +354,7 @@ $("createBtn").onclick = async () => {
 
 function gridHTML(teamId, mine){
   const s = scoreOf(teamId), win = new Set(s.lines.flat());
-  return TASKS.map(([em,tx,p],i) => {
+  return TASKS.map(([em,tx,p,sh],i) => {
     const c = s.cs.find(c=>c.task===i+1);
     const rot = ((i*37)%5-2)*0.9;
     if (c) {
@@ -334,7 +363,7 @@ function gridHTML(teamId, mine){
         ${u?`<div class="ph" style="background-image:url('${u}')"></div>`:`<div class="ph noimg">${em}</div>`}
         <div class="cap">+${p}</div></button>`;
     }
-    return `<button class="sq" data-i="${i}"><span class="pv">${p}</span><span class="em">${em}</span><span class="tx">${esc(tx)}</span></button>`;
+    return `<button class="sq" data-i="${i}"><span class="pv">${p}</span><span class="em">${em}</span><span class="tx">${esc(sh||tx)}</span></button>`;
   }).join("");
 }
 
@@ -345,7 +374,7 @@ function renderCard(){
   $("mePeople").textContent = `${t.p1} & ${t.p2} · you're ${me.name}`;
   $("mePts").textContent = s.pts;
   $("meDone").textContent = s.cs.length;
-  $("meLines").textContent = s.lines.length;
+  $("meLines").textContent = s.lines.length; $("meLinesW").textContent = s.lines.length===1?"bingo":"bingos";
   $("meRank").textContent = r.findIndex(x=>x.t.id===t.id)+1;
   const g = $("grid"); g.innerHTML = gridHTML(t.id, true);
   g.querySelectorAll(".sq").forEach(b => b.onclick = () => openTask(+b.dataset.i));
@@ -358,23 +387,31 @@ function renderBoard(){
   $("winBox").innerHTML = (!open() && r.length && r[0].pts>0)
     ? `<div class="winner"><div class="cr">👑</div><b>${esc(r[0].t.name)}</b><span>${esc(r[0].t.p1)} & ${esc(r[0].t.p2)} win with ${r[0].pts} points</span></div>` : "";
   const lb = $("lb");
-  if (!r.length) { lb.innerHTML = `<div class="empty">No teams yet.</div>`; return; }
-  lb.innerHTML = r.map((x,i) => `<button class="lr${x.t.id===me.teamId?" mine":""}" data-id="${x.t.id}">
-    <div class="rk">${i+1}</div>
+  const left = MAX_TEAMS - teams.length;
+  lb.innerHTML = `<div class="sec-title"><h2>Standings</h2><span>${teams.length} of ${MAX_TEAMS} teams${left&&open()?" · "+left+" spot"+(left===1?"":"s")+" open":""}</span></div>` +
+    r.map((x,i) => `<button class="lr${x.t.id===me.teamId?" mine":""}" data-id="${x.t.id}">
+    <div class="medal${i<3&&x.pts>0?" m"+(i+1):""}">${i+1}</div>
     <div class="mid"><b>${esc(x.t.name)}</b><span>${esc(x.t.p1)} & ${esc(x.t.p2)} · ${x.cs.length}/16 · ${x.lines.length} bingo${x.lines.length===1?"":"s"}</span>
-    <div class="bar"><i style="width:${x.pts/max*100}%"></i></div></div>
-    <div class="sc">${x.pts}</div></button>`).join("");
+    <div class="mini">${TASKS.map((_,j)=>`<i${x.done.has(j)?' class="on"':""}></i>`).join("")}</div></div>
+    <div class="sc">${x.pts}<small>pts</small></div></button>`).join("") +
+    `<div class="rules"><h4>How it works</h4>
+      <div class="r"><div class="ic">📸</div><div><b>Snap it to claim it.</b> Tap a square, add a photo as proof, and the points are yours.</div></div>
+      <div class="r"><div class="ic">✨</div><div><b>Bingo = +50.</b> Complete any row, column or diagonal for a bonus. There are 10 lines to chase.</div></div>
+      <div class="r"><div class="ic">💑</div><div><b>Play as a couple.</b> Either partner can tick off your team's squares from their own phone.</div></div>
+      <div class="r"><div class="ic">⏰</div><div><b>Ends Sunday at 12:00.</b> Highest score wins. If it's a tie, whoever got there first takes it.</div></div>
+    </div>`;
   lb.querySelectorAll(".lr").forEach(b => b.onclick = () => openTeam(b.dataset.id));
 }
 
 function renderFeed(){
   const ps = comps.filter(c=>c.photo_path);
+  $("feedCount").textContent = ps.length ? `${ps.length} photo${ps.length===1?"":"s"}` : "";
   $("feed").innerHTML = ps.length ? ps.map(c => {
     const t = teams.find(t=>t.id===c.team_id)||{}, [em,tx,p] = TASKS[c.task-1];
     return `<div class="pol"><img loading="lazy" src="${photoUrl(c.photo_path)}" alt="">
       <div class="c1">${em} ${esc(tx)}</div>
       <div class="c2">${esc(t.name)}${c.by_name?" · by "+esc(c.by_name):""} · ${ago(c.created_at)} · +${p}</div></div>`;
-  }).join("") : `<div class="empty">No photos yet.<br>Go do something! 📸</div>`;
+  }).join("") : `<div class="emptyfeed"><div class="ghostpol"><div></div></div><p><b>No photos yet</b>Every square you claim lands here for the whole house to see.</p></div>`;
 }
 function ago(d){ const m=Math.round((Date.now()-new Date(d))/60000); if(m<1)return"just now"; if(m<60)return m+"m ago"; const h=Math.round(m/60); return h<24?h+"h ago":new Date(d).toLocaleDateString(undefined,{weekday:"short"}); }
 
