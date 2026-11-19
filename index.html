@@ -237,8 +237,10 @@ const LINES = (() => { const L=[]; for(let i=0;i<4;i++){L.push([0,1,2,3].map(j=>
 const H = {apikey:KEY, Authorization:"Bearer "+KEY};
 async function api(path, opts={}) {
   const r = await fetch(SB+"/rest/v1/"+path, {...opts, headers:{...H,"Content-Type":"application/json",...(opts.headers||{})}});
-  if (!r.ok) { let m=""; try{m=(await r.json()).message}catch(e){} throw new Error(m||("Error "+r.status)); }
-  return r.status===204 ? null : r.json();
+  const txt = await r.text();
+  let data = null; try { data = txt ? JSON.parse(txt) : null; } catch(e){}
+  if (!r.ok) throw new Error((data && data.message) || ("Error "+r.status));
+  return data;
 }
 const photoUrl = p => p ? `${SB}/storage/v1/object/public/photos/${p}` : null;
 
@@ -438,7 +440,10 @@ async function complete(i, path){
       headers:{Prefer:"resolution=merge-duplicates,return=minimal"},
       body:JSON.stringify({team_id:me.teamId, task:i+1, photo_path:path, by_name:me.name})});
     closeSheet(); toast(`+${TASKS[i][2]} · nice one!`); await load();
-  } catch(e){ toast(open()?e.message:"The game has ended"); }
+  } catch(e){
+    toast(open() ? "Couldn't save – try again" : "The game has ended");
+    const b = $("sPhoto"); if (b) { b.disabled = false; b.textContent = "📸 Try again"; }
+  }
 }
 async function undo(i){
   if (!confirm("Undo this square?")) return;
