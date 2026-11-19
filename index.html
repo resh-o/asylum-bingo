@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#FBF4E9">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Asylum Plett Bingo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FBF4E9; --paper:#FFFDF8; --ink:#123C46; --ink2:#4E6B72; --line:#E9DFCF;
+  --sun:#E8794A; --gold:#E9B44C; --rose:#D9605A; --sea:#2D7D86;
+  --serif:"Fraunces",Georgia,serif; --sans:"Inter",-apple-system,BlinkMacSystemFont,sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--sans)}
+body{min-height:100vh;padding:env(safe-area-inset-top) 0 calc(84px + env(safe-area-inset-bottom));
+  background:radial-gradient(120% 60% at 50% -10%,#FCE3C6 0%,rgba(252,227,198,0) 60%),var(--cream)}
+button{font-family:inherit;color:inherit}
+.wrap{max-width:480px;margin:0 auto;padding:0 16px}
+[hidden]{display:none!important}
+
+/* header */
+header{text-align:center;padding:26px 0 6px}
+.kicker{font-size:.68rem;letter-spacing:.28em;text-transform:uppercase;color:var(--sun);font-weight:700}
+h1{font-family:var(--serif);font-weight:700;font-size:2.4rem;line-height:1;margin:6px 0 0;letter-spacing:-.01em}
+h1 i{font-weight:500;color:var(--sun)}
+.sunline{width:48px;height:3px;border-radius:3px;background:linear-gradient(90deg,var(--gold),var(--sun));margin:12px auto 0}
+.clock{margin-top:10px;font-size:.78rem;color:var(--ink2)}
+.clock b{color:var(--ink);font-variant-numeric:tabular-nums}
+
+/* cards & inputs */
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:18px;margin:16px 0;box-shadow:0 10px 30px -18px rgba(18,60,70,.35)}
+.panel h2{font-family:var(--serif);font-weight:500;font-size:1.35rem;margin:0 0 4px}
+.muted{color:var(--ink2);font-size:.85rem;margin:0 0 14px}
+label.f{display:block;font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);margin:12px 0 6px}
+input.t{width:100%;border:1px solid var(--line);background:var(--cream);border-radius:12px;padding:13px 14px;font-size:16px;font-family:inherit;color:var(--ink);outline:none}
+input.t:focus{border-color:var(--sun);background:#fff}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{display:block;width:100%;border:0;border-radius:14px;padding:15px;font-size:1rem;font-weight:700;cursor:pointer;margin-top:14px;text-align:center}
+.btn.primary{background:var(--ink);color:var(--cream)}
+.btn.sun{background:linear-gradient(135deg,var(--gold),var(--sun));color:#fff}
+.btn.soft{background:var(--cream);border:1px solid var(--line)}
+.btn.ghost{background:none;color:var(--ink2);font-weight:500;padding:10px}
+.btn:disabled{opacity:.5}
+.err{color:var(--rose);font-size:.85rem;margin-top:10px;min-height:1em}
+
+.teampick{display:flex;flex-direction:column;gap:8px}
+.tp{display:flex;align-items:center;justify-content:space-between;border:1px solid var(--line);background:var(--cream);border-radius:14px;padding:13px 14px;cursor:pointer;text-align:left;width:100%}
+.tp b{font-family:var(--serif);font-weight:500;font-size:1.05rem;display:block}
+.tp span{font-size:.8rem;color:var(--ink2)}
+.tp .go{color:var(--sun);font-weight:700}
+.who{display:flex;gap:8px;margin-top:10px}
+.who button{flex:1}
+
+/* scoreboard strip */
+.me{display:flex;align-items:flex-end;justify-content:space-between;margin:14px 0 12px}
+.me .tn{font-family:var(--serif);font-size:1.4rem;line-height:1.1}
+.me .pn{font-size:.8rem;color:var(--ink2)}
+.pts{text-align:right}
+.pts b{font-family:var(--serif);font-size:2rem;line-height:1;color:var(--sun)}
+.pts small{display:block;font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2)}
+.chips{display:flex;gap:6px;margin-bottom:12px}
+.chip{background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:5px 11px;font-size:.75rem;color:var(--ink2)}
+.chip b{color:var(--ink)}
+
+/* grid */
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.sq{position:relative;aspect-ratio:1;border:1px solid var(--line);background:var(--paper);border-radius:14px;padding:6px 5px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;cursor:pointer;transition:transform .15s ease;overflow:visible}
+.sq:active{transform:scale(.95)}
+.sq .em{font-size:1.45rem;line-height:1;margin-bottom:5px}
+.sq .tx{font-size:.62rem;line-height:1.2;font-weight:500;color:var(--ink);display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.sq .pv{position:absolute;top:4px;right:6px;font-size:.58rem;font-weight:700;color:var(--sun)}
+.sq.done{background:#fff;border:0;padding:5px 5px 16px;border-radius:4px;box-shadow:0 6px 14px -6px rgba(18,60,70,.45)}
+.sq.done .ph{width:100%;height:100%;border-radius:2px;background:var(--cream) center/cover no-repeat}
+.sq.done .ph.noimg{display:flex;align-items:center;justify-content:center;font-size:1.4rem;background:linear-gradient(135deg,#FCE3C6,#F7CFA8)}
+.sq.done .cap{position:absolute;bottom:2px;left:0;right:0;font-size:.55rem;font-weight:700;color:var(--sun)}
+.sq.win{box-shadow:0 0 0 2px var(--gold),0 8px 18px -6px rgba(233,180,76,.8)}
+.hint{text-align:center;font-size:.75rem;color:var(--ink2);margin:14px 0 0}
+
+/* leaderboard */
+.lb{display:flex;flex-direction:column;gap:10px}
+.lr{display:flex;align-items:center;gap:12px;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:12px 14px;cursor:pointer;text-align:left;width:100%}
+.lr.mine{border-color:var(--sun)}
+.rk{font-family:var(--serif);font-size:1.4rem;width:28px;text-align:center;color:var(--ink2)}
+.lr:first-child .rk{color:var(--gold)}
+.lr .mid{flex:1;min-width:0}
+.lr .mid b{font-family:var(--serif);font-weight:500;font-size:1.05rem;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lr .mid span{font-size:.75rem;color:var(--ink2)}
+.bar{height:4px;background:var(--cream);border-radius:4px;margin-top:6px;overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--sun));border-radius:4px}
+.lr .sc{font-family:var(--serif);font-size:1.4rem;color:var(--sun)}
+.empty{text-align:center;color:var(--ink2);font-size:.9rem;padding:30px 0}
+
+.winner{text-align:center;padding:22px 16px;border-radius:20px;background:linear-gradient(135deg,#FCE3C6,#F9D3B0);margin:14px 0}
+.winner .cr{font-size:2.2rem}
+.winner b{font-family:var(--serif);font-size:1.6rem;display:block;font-weight:700}
+.winner span{font-size:.85rem;color:var(--ink2)}
+
+/* feed */
+.feed{display:flex;flex-direction:column;gap:18px;padding-top:6px}
+.pol{background:#fff;padding:10px 10px 14px;border-radius:4px;box-shadow:0 12px 26px -14px rgba(18,60,70,.5)}
+.pol:nth-child(odd){transform:rotate(-1.2deg)}
+.pol:nth-child(even){transform:rotate(1deg)}
+.pol img{width:100%;display:block;border-radius:2px;background:var(--cream);aspect-ratio:4/5;object-fit:cover}
+.pol .c1{font-family:var(--serif);font-style:italic;font-size:1rem;margin-top:10px}
+.pol .c2{font-size:.75rem;color:var(--ink2);margin-top:2px}
+
+/* tabs */
+nav{position:fixed;left:0;right:0;bottom:0;padding:8px 16px calc(8px + env(safe-area-inset-bottom));background:rgba(251,244,233,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line);z-index:5}
+nav .in{max-width:480px;margin:0 auto;display:flex;gap:6px}
+nav button{flex:1;border:0;background:none;padding:8px 4px;border-radius:12px;font-size:.72rem;font-weight:600;color:var(--ink2);display:flex;flex-direction:column;align-items:center;gap:2px}
+nav button .i{font-size:1.2rem}
+nav button.on{background:var(--paper);color:var(--ink);box-shadow:0 2px 8px -4px rgba(18,60,70,.3)}
+
+/* sheet */
+.ov{position:fixed;inset:0;background:rgba(18,60,70,.45);display:flex;align-items:flex-end;justify-content:center;z-index:10;opacity:0;pointer-events:none;transition:opacity .2s}
+.ov.open{opacity:1;pointer-events:auto}
+.sheet{background:var(--paper);width:100%;max-width:480px;max-height:92vh;overflow:auto;border-radius:24px 24px 0 0;padding:10px 18px calc(18px + env(safe-area-inset-bottom));transform:translateY(30px);transition:transform .25s ease}
+.ov.open .sheet{transform:none}
+.grab{width:40px;height:4px;border-radius:4px;background:var(--line);margin:0 auto 14px}
+.sheet .bigem{font-size:2.4rem}
+.sheet h3{font-family:var(--serif);font-weight:500;font-size:1.45rem;margin:6px 0 2px;line-height:1.2}
+.sheet .sp{color:var(--sun);font-weight:700;font-size:.9rem}
+.sheet .shot{margin:14px 0 4px;background:#fff;padding:8px 8px 12px;border-radius:4px;box-shadow:0 10px 24px -12px rgba(18,60,70,.5)}
+.sheet .shot img{width:100%;display:block;border-radius:2px}
+.sheet .shot div{font-size:.75rem;color:var(--ink2);margin-top:8px;text-align:center}
+.sheet .note{font-size:.8rem;color:var(--ink2);text-align:center;margin-top:10px}
+
+.toast{position:fixed;left:50%;top:calc(14px + env(safe-area-inset-top));transform:translate(-50%,-140%);background:var(--ink);color:var(--cream);padding:11px 18px;border-radius:999px;font-weight:600;font-size:.9rem;z-index:30;transition:transform .3s;white-space:nowrap;max-width:92vw;overflow:hidden;text-overflow:ellipsis}
+.toast.show{transform:translate(-50%,0)}
+.spin{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;vertical-align:-3px}
+@keyframes sp{to{transform:rotate(360deg)}}
+canvas#cf{position:fixed;inset:0;pointer-events:none;z-index:40}
+</style>
+</head>
+<body>
+<canvas id="cf"></canvas>
+<div class="wrap">
+  <header>
+    <div class="kicker">Plettenberg Bay · Weekend Edition</div>
+    <h1>Asylum <i>Plett</i> Bingo</h1>
+    <div class="sunline"></div>
+    <div class="clock" id="clock"></div>
+  </header>
+
+  <!-- JOIN -->
+  <section id="vJoin" hidden>
+    <div class="panel" id="pickPanel">
+      <h2>Join your team</h2>
+      <p class="muted">Already set up by your partner? Tap your team.</p>
+      <div class="teampick" id="teamPick"></div>
+    </div>
+    <div class="panel" id="newPanel">
+      <h2>Start a team</h2>
+      <p class="muted" id="slotsLeft">One couple per team.</p>
+      <div class="row2">
+        <div><label class="f">Your name</label><input class="t" id="nP1" maxlength="30" autocomplete="given-name"></div>
+        <div><label class="f">Partner</label><input class="t" id="nP2" maxlength="30"></div>
+      </div>
+      <label class="f">Team name</label><input class="t" id="nTeam" maxlength="40" placeholder="e.g. The Sunburnt Ones">
+      <button class="btn sun" id="createBtn">Create team</button>
+      <div class="err" id="joinErr"></div>
+    </div>
+  </section>
+
+  <!-- CARD -->
+  <section id="vCard" hidden>
+    <div class="me">
+      <div><div class="tn" id="meTeam"></div><div class="pn" id="mePeople"></div></div>
+      <div class="pts"><b id="mePts">0</b><small>points</small></div>
+    </div>
+    <div class="chips"><div class="chip"><b id="meDone">0</b>/16 done</div><div class="chip"><b id="meLines">0</b> bingos</div><div class="chip">#<b id="meRank">–</b> place</div></div>
+    <div class="grid" id="grid"></div>
+    <p class="hint">Tap a square · add a photo as proof · full line = +50</p>
+  </section>
+
+  <!-- LEADERBOARD -->
+  <section id="vBoard" hidden>
+    <div id="winBox"></div>
+    <div class="lb" id="lb"></div>
+    <p class="hint">Tap a team to see their card</p>
+  </section>
+
+  <!-- FEED -->
+  <section id="vFeed" hidden>
+    <div class="feed" id="feed"></div>
+  </section>
+</div>
+
+<nav id="nav" hidden><div class="in">
+  <button data-v="vCard" class="on"><span class="i">▦</span>Our card</button>
+  <button data-v="vBoard"><span class="i">🏆</span>Leaderboard</button>
+  <button data-v="vFeed"><span class="i">📸</span>Photos</button>
+</div></nav>
+
+<div class="ov" id="ov"><div class="sheet" id="sheet"></div></div>
+<input type="file" accept="image/*" id="file" hidden>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---------- config ---------- */
+const SB = "https://qxpalqqfjappbbzrjusp.supabase.co";
+const KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4cGFscXFmamFwcGJienJqdXNwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTUwOTg3NzMsImV4cCI6MjExMDY3NDc3M30.JU6M3TTp_LGTZZIaDuIP_F0nAHKVvZj3xbiOlNVA1og";
+const END = new Date("2026-11-22T12:00:00+02:00");
+const MAX_TEAMS = 5, BONUS = 50;
+const TASKS = [
+  ["🐒","Selfie with an animal",20],
+  ["🤝","Selfie with a random stranger",25],
+  ["🌊","Get in the ocean",15],
+  ["🐬","Spot a dolphin",30],
+  ["🥾","Hike Robberg",40],
+  ["🦭","See the seals",25],
+  ["🌅","Sunset at Lookout Beach",15],
+  ["🦐","Eat fresh seafood",15],
+  ["☀️","Catch a sunrise",30],
+  ["🤸","Get a stranger to film you doing a cartwheel",30],
+  ["🐚","Find a shell bigger than your palm",10],
+  ["🍦","Ice cream on the beach",10],
+  ["🎁","Buy a stranger something",20],
+  ["💃","Dance in public",25],
+  ["🪪","Find a stranger with the same name as someone in the house",35],
+  ["✨","Do something you've never done",35]
+];
+const LINES = (() => { const L=[]; for(let i=0;i<4;i++){L.push([0,1,2,3].map(j=>i*4+j));L.push([0,1,2,3].map(j=>j*4+i));} L.push([0,5,10,15],[3,6,9,12]); return L; })();
+
+/* ---------- api ---------- */
+const H = {apikey:KEY, Authorization:"Bearer "+KEY};
+async function api(path, opts={}) {
+  const r = await fetch(SB+"/rest/v1/"+path, {...opts, headers:{...H,"Content-Type":"application/json",...(opts.headers||{})}});
+  if (!r.ok) { let m=""; try{m=(await r.json()).message}catch(e){} throw new Error(m||("Error "+r.status)); }
+  return r.status===204 ? null : r.json();
+}
+const photoUrl = p => p ? `${SB}/storage/v1/object/public/photos/${p}` : null;
+
+/* ---------- state ---------- */
+let me = {}; try { me = JSON.parse(localStorage.getItem("apb.me")) || {}; } catch(e){}
+const saveMe = () => { try { localStorage.setItem("apb.me", JSON.stringify(me)); } catch(e){} };
+let teams = [], comps = [], view = "vCard", lastLines = null;
+const open = () => Date.now() < END.getTime();
+const esc = s => String(s??"").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const $ = id => document.getElementById(id);
+
+function scoreOf(teamId){
+  const cs = comps.filter(c => c.team_id===teamId);
+  const done = new Set(cs.map(c => c.task-1));
+  const lines = LINES.filter(l => l.every(i => done.has(i)));
+  const pts = cs.reduce((s,c)=>s+TASKS[c.task-1][2],0) + lines.length*BONUS;
+  const at = cs.length ? Math.max(...cs.map(c=>+new Date(c.created_at))) : Infinity;
+  return {cs, done, lines, pts, at};
+}
+function ranked(){
+  return teams.map(t => ({t, ...scoreOf(t.id)}))
+    .sort((a,b) => b.pts-a.pts || a.at-b.at || +new Date(a.t.created_at)-+new Date(b.t.created_at));
+}
+
+/* ---------- load ---------- */
+async function load(){
+  try {
+    [teams, comps] = await Promise.all([
+      api("teams?select=*&order=created_at"),
+      api("completions?select=*&order=created_at.desc")
+    ]);
+  } catch(e){ toast("Can't reach the server – check signal"); return; }
+  if (me.teamId && !teams.find(t=>t.id===me.teamId)) { me = {}; saveMe(); }
+  render();
+}
+
+/* ---------- render ---------- */
+function render(){
+  const joined = !!me.teamId;
+  $("vJoin").hidden = joined;
+  $("nav").hidden = !joined;
+  ["vCard","vBoard","vFeed"].forEach(v => $(v).hidden = !joined || v!==view);
+  document.querySelectorAll("nav button").forEach(b => b.classList.toggle("on", b.dataset.v===view));
+  if (!joined) return renderJoin();
+  renderCard(); renderBoard(); renderFeed();
+}
+
+function renderJoin(){
+  const pick = $("teamPick");
+  $("pickPanel").hidden = !teams.length;
+  pick.innerHTML = "";
+  teams.forEach(t => {
+    const b = document.createElement("div");
+    b.innerHTML = `<button class="tp"><div><b>${esc(t.name)}</b><span>${esc(t.p1)} & ${esc(t.p2)}</span></div><span class="go">Join →</span></button>`;
+    b.querySelector("button").onclick = () => {
+      if (b.querySelector(".who")) return;
+      b.insertAdjacentHTML("beforeend", `<div class="who"><button class="btn soft" style="margin:0">I'm ${esc(t.p1)}</button><button class="btn soft" style="margin:0">I'm ${esc(t.p2)}</button></div>`);
+      const [x,y] = b.querySelectorAll(".who button");
+      x.onclick = () => join(t, t.p1); y.onclick = () => join(t, t.p2);
+    };
+    pick.appendChild(b);
+  });
+  const left = MAX_TEAMS - teams.length;
+  $("newPanel").hidden = left<=0 || !open();
+  $("slotsLeft").textContent = `One couple per team · ${left} of ${MAX_TEAMS} spots left`;
+}
+function join(t, name){ me = {teamId:t.id, name}; saveMe(); view="vCard"; lastLines=null; render(); toast(`Welcome, ${name} 🌊`); }
+
+$("createBtn").onclick = async () => {
+  const p1=$("nP1").value.trim(), p2=$("nP2").value.trim(), name=$("nTeam").value.trim();
+  if (!p1||!p2||!name) { $("joinErr").textContent = "Fill in both names and a team name."; return; }
+  $("createBtn").disabled = true; $("joinErr").textContent = "";
+  try {
+    const [t] = await api("teams", {method:"POST", headers:{Prefer:"return=representation"}, body:JSON.stringify({name,p1,p2})});
+    teams.push(t); join(t, p1);
+  } catch(e){
+    $("joinErr").textContent = /duplicate|unique/i.test(e.message) ? "That team name is taken." : e.message;
+    load();
+  }
+  $("createBtn").disabled = false;
+};
+
+function gridHTML(teamId, mine){
+  const s = scoreOf(teamId), win = new Set(s.lines.flat());
+  return TASKS.map(([em,tx,p],i) => {
+    const c = s.cs.find(c=>c.task===i+1);
+    const rot = ((i*37)%5-2)*0.9;
+    if (c) {
+      const u = photoUrl(c.photo_path);
+      return `<button class="sq done${win.has(i)?" win":""}" data-i="${i}" style="transform:rotate(${rot}deg)">
+        ${u?`<div class="ph" style="background-image:url('${u}')"></div>`:`<div class="ph noimg">${em}</div>`}
+        <div class="cap">+${p}</div></button>`;
+    }
+    return `<button class="sq" data-i="${i}"><span class="pv">${p}</span><span class="em">${em}</span><span class="tx">${esc(tx)}</span></button>`;
+  }).join("");
+}
+
+function renderCard(){
+  const t = teams.find(t=>t.id===me.teamId); if(!t) return;
+  const s = scoreOf(t.id), r = ranked();
+  $("meTeam").textContent = t.name;
+  $("mePeople").textContent = `${t.p1} & ${t.p2} · you're ${me.name}`;
+  $("mePts").textContent = s.pts;
+  $("meDone").textContent = s.cs.length;
+  $("meLines").textContent = s.lines.length;
+  $("meRank").textContent = r.findIndex(x=>x.t.id===t.id)+1;
+  const g = $("grid"); g.innerHTML = gridHTML(t.id, true);
+  g.querySelectorAll(".sq").forEach(b => b.onclick = () => openTask(+b.dataset.i));
+  if (lastLines!==null && s.lines.length>lastLines) { confetti(); toast(s.lines.length===10?"🏆 BLACKOUT! Every square done!":"🎉 BINGO! +50"); }
+  lastLines = s.lines.length;
+}
+
+function renderBoard(){
+  const r = ranked(), max = Math.max(1, ...r.map(x=>x.pts));
+  $("winBox").innerHTML = (!open() && r.length && r[0].pts>0)
+    ? `<div class="winner"><div class="cr">👑</div><b>${esc(r[0].t.name)}</b><span>${esc(r[0].t.p1)} & ${esc(r[0].t.p2)} win with ${r[0].pts} points</span></div>` : "";
+  const lb = $("lb");
+  if (!r.length) { lb.innerHTML = `<div class="empty">No teams yet.</div>`; return; }
+  lb.innerHTML = r.map((x,i) => `<button class="lr${x.t.id===me.teamId?" mine":""}" data-id="${x.t.id}">
+    <div class="rk">${i+1}</div>
+    <div class="mid"><b>${esc(x.t.name)}</b><span>${esc(x.t.p1)} & ${esc(x.t.p2)} · ${x.cs.length}/16 · ${x.lines.length} bingo${x.lines.length===1?"":"s"}</span>
+    <div class="bar"><i style="width:${x.pts/max*100}%"></i></div></div>
+    <div class="sc">${x.pts}</div></button>`).join("");
+  lb.querySelectorAll(".lr").forEach(b => b.onclick = () => openTeam(b.dataset.id));
+}
+
+function renderFeed(){
+  const ps = comps.filter(c=>c.photo_path);
+  $("feed").innerHTML = ps.length ? ps.map(c => {
+    const t = teams.find(t=>t.id===c.team_id)||{}, [em,tx,p] = TASKS[c.task-1];
+    return `<div class="pol"><img loading="lazy" src="${photoUrl(c.photo_path)}" alt="">
+      <div class="c1">${em} ${esc(tx)}</div>
+      <div class="c2">${esc(t.name)}${c.by_name?" · by "+esc(c.by_name):""} · ${ago(c.created_at)} · +${p}</div></div>`;
+  }).join("") : `<div class="empty">No photos yet.<br>Go do something! 📸</div>`;
+}
+function ago(d){ const m=Math.round((Date.now()-new Date(d))/60000); if(m<1)return"just now"; if(m<60)return m+"m ago"; const h=Math.round(m/60); return h<24?h+"h ago":new Date(d).toLocaleDateString(undefined,{weekday:"short"}); }
+
+/* ---------- sheets ---------- */
+const ov = $("ov"), sheet = $("sheet");
+ov.onclick = e => { if (e.target===ov) closeSheet(); };
+function openSheet(html){ sheet.innerHTML = `<div class="grab"></div>`+html; ov.classList.add("open"); }
+function closeSheet(){ ov.classList.remove("open"); }
+
+let curTask = null;
+function openTask(i){
+  curTask = i;
+  const [em,tx,p] = TASKS[i];
+  const c = comps.find(c=>c.team_id===me.teamId && c.task===i+1);
+  const u = c && photoUrl(c.photo_path);
+  let body = `<div class="bigem">${em}</div><h3>${esc(tx)}</h3><div class="sp">${p} points</div>`;
+  if (c) body += u ? `<div class="shot"><img src="${u}" alt=""><div>by ${esc(c.by_name||"someone")} · ${ago(c.created_at)}</div></div>`
+                   : `<p class="note">Done by ${esc(c.by_name||"someone")} (no photo)</p>`;
+  if (!open()) body += `<p class="note">The game has ended. No more changes.</p><button class="btn ghost" id="sClose">Close</button>`;
+  else if (c) body += `<button class="btn soft" id="sPhoto">${u?"Replace photo":"Add a photo"}</button><button class="btn ghost" id="sUndo" style="color:var(--rose)">Undo this square</button>`;
+  else body += `<button class="btn sun" id="sPhoto">📸 Add photo proof</button><button class="btn ghost" id="sNoPhoto">Mark done without a photo</button>`;
+  openSheet(body);
+  $("sClose") && ($("sClose").onclick = closeSheet);
+  $("sPhoto") && ($("sPhoto").onclick = () => $("file").click());
+  $("sNoPhoto") && ($("sNoPhoto").onclick = () => complete(i, null));
+  $("sUndo") && ($("sUndo").onclick = () => undo(i));
+}
+
+function openTeam(id){
+  const t = teams.find(t=>t.id===id), s = scoreOf(id);
+  openSheet(`<h3>${esc(t.name)}</h3><div class="sp">${s.pts} points · ${s.cs.length}/16 · ${s.lines.length} bingos</div>
+    <p class="muted" style="margin-top:4px">${esc(t.p1)} & ${esc(t.p2)}</p>
+    <div class="grid" id="tGrid" style="margin-top:6px">${gridHTML(id,false)}</div>
+    ${id!==me.teamId?"":`<button class="btn ghost" id="sLeave">Switch team / player</button>`}
+    <button class="btn soft" id="sClose">Close</button>`);
+  $("tGrid").querySelectorAll(".sq.done").forEach(b => b.onclick = () => {
+    const c = s.cs.find(c=>c.task===+b.dataset.i+1), u = photoUrl(c.photo_path), [em,tx,p]=TASKS[c.task-1];
+    openSheet(`<div class="bigem">${em}</div><h3>${esc(tx)}</h3><div class="sp">${esc(t.name)} · +${p}</div>
+      ${u?`<div class="shot"><img src="${u}" alt=""><div>by ${esc(c.by_name||"someone")} · ${ago(c.created_at)}</div></div>`:`<p class="note">Done without a photo</p>`}
+      <button class="btn soft" id="sBack">Back</button>`);
+    $("sBack").onclick = () => openTeam(id);
+  });
+  $("sClose").onclick = closeSheet;
+  $("sLeave") && ($("sLeave").onclick = () => { me={}; saveMe(); closeSheet(); render(); });
+}
+
+/* ---------- actions ---------- */
+$("file").onchange = async e => {
+  const f = e.target.files[0]; e.target.value = ""; if (!f) return;
+  const btn = $("sPhoto"); if (btn) { btn.disabled = true; btn.innerHTML = `<span class="spin"></span> Uploading…`; }
+  try {
+    const blob = await shrink(f, 1280, .8);
+    const path = `${me.teamId}/${curTask+1}-${Date.now()}.jpg`;
+    const r = await fetch(`${SB}/storage/v1/object/photos/${path}`, {method:"POST", headers:{...H,"Content-Type":"image/jpeg"}, body:blob});
+    if (!r.ok) throw new Error("Upload failed");
+    await complete(curTask, path);
+  } catch(err){ toast(err.message||"Upload failed"); if (btn){btn.disabled=false;btn.textContent="📸 Try again";} }
+};
+
+async function complete(i, path){
+  try {
+    await api("completions?on_conflict=team_id,task", {method:"POST",
+      headers:{Prefer:"resolution=merge-duplicates,return=minimal"},
+      body:JSON.stringify({team_id:me.teamId, task:i+1, photo_path:path, by_name:me.name})});
+    closeSheet(); toast(`+${TASKS[i][2]} · nice one!`); await load();
+  } catch(e){ toast(open()?e.message:"The game has ended"); }
+}
+async function undo(i){
+  if (!confirm("Undo this square?")) return;
+  try { await api(`completions?team_id=eq.${me.teamId}&task=eq.${i+1}`, {method:"DELETE"}); closeSheet(); lastLines=null; await load(); }
+  catch(e){ toast(e.message); }
+}
+
+function shrink(file, max, q){
+  return new Promise((res, rej) => {
+    const img = new Image(), url = URL.createObjectURL(file);
+    img.onload = () => {
+      const s = Math.min(1, max/Math.max(img.width,img.height)), c = document.createElement("canvas");
+      c.width = Math.round(img.width*s); c.height = Math.round(img.height*s);
+      c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+      URL.revokeObjectURL(url);
+      c.toBlob(b => b?res(b):rej(new Error("Couldn't read photo")), "image/jpeg", q);
+    };
+    img.onerror = () => rej(new Error("Couldn't read photo"));
+    img.src = url;
+  });
+}
+
+/* ---------- misc ---------- */
+document.querySelectorAll("nav button").forEach(b => b.onclick = () => { view=b.dataset.v; render(); scrollTo({top:0,behavior:"smooth"}); });
+
+function tick(){
+  const ms = END - Date.now();
+  if (ms<=0) { $("clock").innerHTML = "<b>Game over</b> · final scores are in 👑"; return; }
+  const d=Math.floor(ms/864e5), h=Math.floor(ms/36e5)%24, m=Math.floor(ms/6e4)%60;
+  $("clock").innerHTML = `Ends Sunday 12:00 · <b>${d?d+"d ":""}${h}h ${m}m</b> left`;
+}
+
+let tt; function toast(m){ const t=$("toast"); t.textContent=m; t.classList.add("show"); clearTimeout(tt); tt=setTimeout(()=>t.classList.remove("show"),2400); }
+
+function confetti(){
+  const c=$("cf"), x=c.getContext("2d"); c.width=innerWidth; c.height=innerHeight;
+  const cols=["#E8794A","#E9B44C","#2D7D86","#D9605A","#FCE3C6"];
+  const P=Array.from({length:120},()=>({x:innerWidth/2,y:innerHeight/3,vx:(Math.random()-.5)*12,vy:Math.random()*-12-3,s:Math.random()*6+4,c:cols[Math.random()*5|0],r:Math.random()*6}));
+  let f=0; (function loop(){ x.clearRect(0,0,c.width,c.height);
+    P.forEach(p=>{p.vy+=.35;p.x+=p.vx;p.y+=p.vy;p.r+=.1;x.save();x.translate(p.x,p.y);x.rotate(p.r);x.fillStyle=p.c;x.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);x.restore();});
+    if(++f<110) requestAnimationFrame(loop); else x.clearRect(0,0,c.width,c.height); })();
+}
+
+tick(); setInterval(tick, 30000);
+load(); setInterval(() => { if (!document.hidden && !ov.classList.contains("open")) load(); }, 10000);
+document.addEventListener("visibilitychange", () => { if (!document.hidden) load(); });
+</script>
+</body>
+</html>
